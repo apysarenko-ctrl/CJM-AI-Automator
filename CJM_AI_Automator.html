@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Automator – Твій шлях на курсі | GoIT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #EDECE8;
+      --blue:     #A8B8F0;
+      --pink:     #F5B8B8;
+      --green:    #A8E6CF;
+      --yellow:   #FFE0A0;
+      --purple:   #C8B8F0;
+      --black:    #1A1A1A;
+      --grey:     #6B6B6B;
+      --card-bg:  #FFFFFF;
+      --shadow:   0 4px 24px rgba(0,0,0,0.08);
+      --shadow-h: 0 8px 36px rgba(0,0,0,0.14);
+      --radius:   20px;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      min-height: 100vh;
+      padding-bottom: 64px;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      padding: 36px 56px 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      color: var(--black);
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+    .header-center { flex: 1; }
+    .main-title {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--black);
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--grey);
+      letter-spacing: 0.3px;
+    }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .reset-btn {
+      background: var(--black);
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 50px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s;
+      white-space: nowrap;
+    }
+    .reset-btn:hover { opacity: .75; }
+
+    /* ─── PROGRESS BAR ─── */
+    .progress-section {
+      padding: 0 56px 32px;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 8px;
+    }
+    .progress-track {
+      height: 10px;
+      background: #DDD;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      border-radius: 5px;
+      width: 0%;
+      transition: width .5s ease;
+    }
+
+    /* ─── ROADMAP ─── */
+    .roadmap-wrap {
+      padding: 0 56px 48px;
+      overflow-x: auto;
+    }
+    .roadmap {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      min-width: max-content;
+      position: relative;
+    }
+    /* connecting dotted line behind cards */
+    .roadmap::before {
+      content: '';
+      position: absolute;
+      top: 56px;
+      left: 40px;
+      right: 40px;
+      height: 3px;
+      background: repeating-linear-gradient(
+        90deg, #CCC 0, #CCC 8px, transparent 8px, transparent 16px
+      );
+      z-index: 0;
+    }
+
+    /* ─── BLOCK CARD ─── */
+    .block-card {
+      width: 280px;
+      flex-shrink: 0;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      position: relative;
+      z-index: 1;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .block-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-h);
+    }
+
+    /* accent top border */
+    .block-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      background: var(--accent);
+    }
+
+    /* step dot on the line */
+    .block-card .step-dot {
+      display: none;
+    }
+
+    .block-0 { --accent: var(--purple); }
+    .block-1 { --accent: var(--blue); }
+    .block-2 { --accent: var(--pink); }
+    .block-3 { --accent: var(--yellow); }
+    .block-4 { --accent: var(--green); }
+
+    /* SoftSkills note box */
+    .softskills-note {
+      margin-top: 14px;
+      background: rgba(200,184,240,0.15);
+      border: 1.5px dashed var(--purple);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: #555;
+    }
+    .no-dz-badge {
+      display: inline-block;
+      background: var(--purple);
+      color: var(--black);
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+    }
+
+    /* block header area */
+    .block-chip {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--black);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 50px;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+    }
+    .block-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--black);
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+    .difficulty-badge {
+      display: inline-block;
+      background: var(--black);
+      color: #fff;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    /* block progress mini-bar */
+    .mini-bar-wrap { margin-bottom: 14px; }
+    .mini-bar-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--grey);
+      margin-bottom: 4px;
+    }
+    .mini-bar-track {
+      height: 5px;
+      background: #EEE;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .mini-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      width: 0%;
+      transition: width .4s ease;
+    }
+
+    /* module list */
+    .module-list { list-style: none; }
+    .module-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 7px 0;
+      border-bottom: 1px solid #F2F2F2;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background .15s;
+    }
+    .module-item:last-child { border-bottom: none; }
+    .module-item:hover { background: rgba(0,0,0,.02); }
+
+    /* pixel-style 9×9 checkbox */
+    .px-check {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      image-rendering: pixelated;
+    }
+    .module-text {
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.45;
+      color: #333;
+      transition: color .2s;
+      user-select: none;
+    }
+    .module-item.done .module-text {
+      color: #AAAAAA;
+      text-decoration: line-through;
+    }
+
+    /* tip box */
+    .tip-box {
+      margin-top: 14px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,.03);
+      border-left: 3px solid var(--accent);
+      font-size: 10.5px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: #555;
+    }
+
+    /* ─── CONNECTOR ─── */
+    .connector {
+      display: flex;
+      align-items: center;
+      padding-top: 48px;
+      position: relative;
+      z-index: 1;
+    }
+    .connector svg { display: block; }
+
+    /* ─── FINAL DESTINATION ─── */
+    .final-card {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--card-bg);
+      color: var(--black);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      box-shadow: var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+      border-top: 5px solid var(--purple);
+    }
+    .final-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-h);
+    }
+    .final-card .step-dot {
+      display: none;
+    }
+    .trophy-icon {
+      margin: 0 auto 14px;
+      display: block;
+      image-rendering: pixelated;
+    }
+    .final-badge {
+      display: inline-block;
+      background: #FFD700;
+      color: var(--black);
+      font-size: 10px;
+      font-weight: 900;
+      padding: 4px 12px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+    }
+    .final-title {
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .final-items {
+      list-style: none;
+      text-align: left;
+    }
+    .final-items li {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--grey);
+      padding: 3px 0;
+      padding-left: 14px;
+      position: relative;
+    }
+    .final-items li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ─── TIPS SECTION ─── */
+    .tips-section {
+      padding: 0 56px;
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .tip-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+    .tip-num {
+      font-size: 48px;
+      font-weight: 900;
+      color: #EEEEEE;
+      line-height: 1;
+      margin-bottom: 8px;
+      font-variant-numeric: tabular-nums;
+    }
+    .tip-text {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #333;
+      line-height: 1.6;
+    }
+    .tip-text strong { font-weight: 800; color: var(--black); }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .header { padding: 24px 20px 16px; flex-wrap: wrap; }
+      .main-title { font-size: 26px; }
+      .progress-section, .roadmap-wrap, .tips-section { padding-left: 20px; padding-right: 20px; }
+      .tips-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="header">
+  <div class="logo">GOIT</div>
+  <div class="header-center">
+    <h1 class="main-title">Твій шлях на курсі AI Automator</h1>
+    <p class="subtitle">20 домашніх завдань &nbsp;·&nbsp; 4 блоки &nbsp;·&nbsp; 5 місяців &nbsp;·&nbsp; від нуля до власних AI-агентів</p>
+  </div>
+  <div class="header-right">
+    <button class="reset-btn" onclick="resetAll()">↺ Скинути прогрес</button>
+  </div>
+</header>
+
+<!-- ═══════════════ PROGRESS BAR ═══════════════ -->
+<section class="progress-section">
+  <div class="progress-meta">
+    <span>Загальний прогрес</span>
+    <span id="progress-label">0 / 20 завдань виконано &nbsp;·&nbsp; 0%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ ROADMAP ═══════════════ -->
+<section class="roadmap-wrap">
+  <div class="roadmap">
+
+    <!-- ── BLOCK 0: SOFT SKILLS ── -->
+    <div class="block-card block-0">
+      <div class="step-dot"></div>
+      <span class="block-chip">ВСТУПНИЙ БЛОК</span>
+      <h2 class="block-title">Soft Skills</h2>
+      <span class="no-dz-badge">Без домашніх завдань</span>
+      <div class="softskills-note">
+        🚀 <strong>Розпочинаємо навчання з цього блоку.</strong><br><br>
+        Знайомимось із курсом, командою та платформою. Прокачуємо свої Soft Skills — навички, які допоможуть вам ефективно навчатись і працювати з AI-інструментами.<br><br>
+        На цьому блоці відсутні домашні завдання.
+      </div>
+    </div>
+
+    <!-- connector -->
+    <div class="connector">
+      <svg width="52" height="24" viewBox="0 0 52 24">
+        <line x1="2" y1="12" x2="40" y2="12" stroke="#BBBBBB" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="40,7 50,12 40,17" fill="#BBBBBB"/>
+      </svg>
+    </div>
+
+    <!-- ── BLOCK 1 ── -->
+    <div class="block-card block-1">
+      <div class="step-dot"></div>
+      <span class="block-chip">БЛОК 1 &nbsp;·&nbsp; 6 тижнів &nbsp;·&nbsp; 5 ДЗ</span>
+      <h2 class="block-title">Prompt Engineering<br>&amp; AI Agents</h2>
+      <span class="difficulty-badge">Вступний блок — потрібен час на адаптацію</span>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-label" id="b1-label">0 / 5 виконано</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" id="b1-bar"></div></div>
+      </div>
+      <ul class="module-list" id="block-1">
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 1 — Модуль 1+2: Основи промпт-інжинірингу + Як працює LLM та кастомізація</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 2 — Модуль 3: n8n для автоматизації</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 3 — Модуль 4: Автоматизація Google-сервісів</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 4 — Модуль 5: Google Drive, Data Tables, звук та зображення</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 5 — Модуль 6: Фінальний проєкт блоку</span>
+        </li>
+      </ul>
+      <div class="tip-box">💡 Цей блок — фундамент. Тут ви вперше стикаєтесь з n8n, JSON, API. Закладайте додатковий час на практику.</div>
+    </div>
+
+    <!-- connector -->
+    <div class="connector">
+      <svg width="52" height="24" viewBox="0 0 52 24">
+        <line x1="2" y1="12" x2="40" y2="12" stroke="#BBBBBB" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="40,7 50,12 40,17" fill="#BBBBBB"/>
+      </svg>
+    </div>
+
+    <!-- ── BLOCK 2 ── -->
+    <div class="block-card block-2">
+      <div class="step-dot"></div>
+      <span class="block-chip">БЛОК 2 &nbsp;·&nbsp; 5 тижнів &nbsp;·&nbsp; 5 ДЗ</span>
+      <h2 class="block-title">AI Marketing<br>Automation</h2>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-label" id="b2-label">0 / 5 виконано</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" id="b2-bar"></div></div>
+      </div>
+      <ul class="module-list" id="block-2">
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 6 — Модуль 0+1: Вступ до автоматизації маркетингу + AI-контент у Telegram</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 7 — Модуль 2: Лендинг і збір лідів — від форми до Google Sheets і Telegram</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 8 — Модуль 3: Zoho CRM — знайомство та підключення до воронки</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 9 — Модуль 4: Email-воронка — Klaviyo, AI-кваліфікація та прогрів лідів</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 10 — Модуль 5: Фінальний проєкт — повна AI-автоворонка</span>
+        </li>
+      </ul>
+      <div class="tip-box">💡 Будуєте повну маркетингову воронку з AI. Практикуйте на реальних бізнес-кейсах.</div>
+    </div>
+
+    <!-- connector -->
+    <div class="connector">
+      <svg width="52" height="24" viewBox="0 0 52 24">
+        <line x1="2" y1="12" x2="40" y2="12" stroke="#BBBBBB" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="40,7 50,12 40,17" fill="#BBBBBB"/>
+      </svg>
+    </div>
+
+    <!-- ── BLOCK 3 ── -->
+    <div class="block-card block-3">
+      <div class="step-dot"></div>
+      <span class="block-chip">БЛОК 3 &nbsp;·&nbsp; 5 тижнів &nbsp;·&nbsp; 5 ДЗ</span>
+      <h2 class="block-title">AI Sales<br>Automation</h2>
+      <span class="difficulty-badge">🔥 Найскладніший блок. Закладайте максимум часу!</span>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-label" id="b3-label">0 / 5 виконано</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" id="b3-bar"></div></div>
+      </div>
+      <ul class="module-list" id="block-3">
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 11 — Модуль 0+1: Аналіз процесів у відділі продажу + AI Sales Qualification</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 12 — Модуль 2: AI Follow-Up Engine — персональні каскади дотиків</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 13 — Модуль 3: AI Sales Assistant — КП, скрипти та заперечення</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 14 — Модуль 4: Voice AI Agent для продажів</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 15 — Модуль 5: AI Sales Reporting &amp; Pipeline Performance</span>
+        </li>
+      </ul>
+      <div class="tip-box">⚠️ Sales-блок — найнасиченіший. Складність ДЗ тут 5/5.</div>
+    </div>
+
+    <!-- connector -->
+    <div class="connector">
+      <svg width="52" height="24" viewBox="0 0 52 24">
+        <line x1="2" y1="12" x2="40" y2="12" stroke="#BBBBBB" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="40,7 50,12 40,17" fill="#BBBBBB"/>
+      </svg>
+    </div>
+
+    <!-- ── BLOCK 4 ── -->
+    <div class="block-card block-4">
+      <div class="step-dot"></div>
+      <span class="block-chip">БЛОК 4 &nbsp;·&nbsp; 4 тижні &nbsp;·&nbsp; 5 ДЗ</span>
+      <h2 class="block-title">AI Customer Service<br>Automation</h2>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-label" id="b4-label">0 / 5 виконано</div>
+        <div class="mini-bar-track"><div class="mini-bar-fill" id="b4-bar"></div></div>
+      </div>
+      <ul class="module-list" id="block-4">
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 16 — Модуль 0+1: Стратегічний аналіз + Вибір стратегії та інструментів автоматизації</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 17 — Модуль 2: Чатботи у клієнтському сервісі</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 18 — Модуль 3: AI-збір фідбеку, NPS та аналітика клієнтського досвіду</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 19 — Модуль 4: Контроль результатів та Root Cause Analysis</span>
+        </li>
+        <li class="module-item" onclick="toggle(this)">
+          <svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>
+          <span class="module-text">ДЗ 20 — Фінальний проєкт блоку: повна AI-система обслуговування</span>
+        </li>
+      </ul>
+      <div class="tip-box">💡 Завершальний блок. Зводите все разом у єдину AI-систему клієнтського сервісу.</div>
+    </div>
+
+    <!-- connector -->
+    <div class="connector">
+      <svg width="52" height="24" viewBox="0 0 52 24">
+        <line x1="2" y1="12" x2="40" y2="12" stroke="#BBBBBB" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="40,7 50,12 40,17" fill="#BBBBBB"/>
+      </svg>
+    </div>
+
+    <!-- ── FINAL DESTINATION ── -->
+    <div class="final-card">
+      <div class="step-dot"></div>
+      <!-- pixel-art trophy 9×9 scaled to 54×54 -->
+      <svg class="trophy-icon" width="54" height="54" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
+        <!-- cup body -->
+        <rect x="2" y="0" width="5" height="1" fill="#FFD700"/>
+        <rect x="1" y="1" width="7" height="3" fill="#FFD700"/>
+        <!-- handles -->
+        <rect x="0" y="1" width="1" height="2" fill="#FFD700"/>
+        <rect x="8" y="1" width="1" height="2" fill="#FFD700"/>
+        <!-- bottom of cup -->
+        <rect x="2" y="4" width="5" height="1" fill="#FFD700"/>
+        <!-- stem -->
+        <rect x="4" y="5" width="1" height="1" fill="#FFD700"/>
+        <!-- base -->
+        <rect x="2" y="6" width="5" height="1" fill="#FFD700"/>
+        <rect x="1" y="7" width="7" height="1" fill="#FFD700"/>
+        <!-- shine -->
+        <rect x="3" y="1" width="1" height="1" fill="#FFF9C4" opacity="0.7"/>
+      </svg>
+      <div class="final-badge">🎓 ФІНІШ</div>
+      <p class="final-title">Проходимо фінальне тестування &amp; Отримуємо сертифікат GoIT</p>
+      <ul class="final-items">
+        <li>Підтримка карʼєрного центру</li>
+        <li>Курс «Монетизація»</li>
+        <li>Доступ до спільноти</li>
+      </ul>
+    </div>
+
+  </div><!-- /roadmap -->
+</section>
+
+<!-- ═══════════════ TIPS SECTION ═══════════════ -->
+<section class="tips-section">
+  <h2 class="section-title">Поради для планування</h2>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-num">01</div>
+      <p class="tip-text"><strong>Блок Prompt Engineering</strong> — вступний, тут все нове. Не поспішайте, повторюйте практику. Перечитуйте матеріал стільки разів, скільки потрібно.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">02</div>
+      <p class="tip-text"><strong>Блок AI Sales</strong> — найскладніший. Усі ДЗ мають складність 5/5. Закладайте на нього на <strong>30% більше часу</strong>, ніж на інші блоки.</p>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">03</div>
+      <p class="tip-text">Навчаємось у <strong>своєму темпі</strong>, але дотримуємось дедлайнів в LMS. Якщо відстаєте — зверніться до свого <strong>клієнт-менеджера та ментора</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ JAVASCRIPT ═══════════════ -->
+<script>
+  const TOTAL = 20;
+  const BLOCK_SIZES = { 1: 5, 2: 5, 3: 5, 4: 5 };
+
+  // SVG icons
+  const UNCHECKED_SVG = `<svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="none" stroke="#CCC" stroke-width="1"/></svg>`;
+  const CHECKED_SVG   = `<svg class="px-check" viewBox="0 0 9 9"><rect x="0" y="0" width="9" height="9" rx="1.5" fill="#1A1A1A"/><polyline points="2,4.5 4,7 7,2.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  function toggle(item) {
+    const done = item.classList.toggle('done');
+    item.querySelector('.px-check').outerHTML; // placeholder
+    const svg = item.querySelector('svg');
+    svg.outerHTML = done ? CHECKED_SVG : UNCHECKED_SVG;
+    saveState();
+    updateUI();
+  }
+
+  function updateUI() {
+    let total = 0;
+    for (let b = 1; b <= 4; b++) {
+      const items = document.querySelectorAll(`#block-${b} .module-item`);
+      const done  = [...items].filter(i => i.classList.contains('done')).length;
+      const pct   = items.length ? Math.round(done / items.length * 100) : 0;
+      document.getElementById(`b${b}-label`).textContent = `${done} / ${items.length} виконано`;
+      document.getElementById(`b${b}-bar`).style.width   = pct + '%';
+      total += done;
+    }
+    const pct = Math.round(total / TOTAL * 100);
+    document.getElementById('progress-fill').style.width  = pct + '%';
+    document.getElementById('progress-label').textContent =
+      `${total} / ${TOTAL} завдань виконано · ${pct}%`;
+  }
+
+  function saveState() {
+    const state = {};
+    for (let b = 1; b <= 4; b++) {
+      state[b] = [...document.querySelectorAll(`#block-${b} .module-item`)]
+        .map(i => i.classList.contains('done'));
+    }
+    try { localStorage.setItem('cjm_progress', JSON.stringify(state)); } catch(e) {}
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem('cjm_progress');
+      if (!raw) return;
+      const state = JSON.parse(raw);
+      for (let b = 1; b <= 4; b++) {
+        const items = [...document.querySelectorAll(`#block-${b} .module-item`)];
+        (state[b] || []).forEach((done, i) => {
+          if (done && items[i]) {
+            items[i].classList.add('done');
+            const svg = items[i].querySelector('svg');
+            if (svg) svg.outerHTML = CHECKED_SVG;
+          }
+        });
+      }
+      updateUI();
+    } catch(e) {}
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.module-item.done').forEach(item => {
+      item.classList.remove('done');
+      const svg = item.querySelector('svg');
+      if (svg) svg.outerHTML = UNCHECKED_SVG;
+    });
+    try { localStorage.removeItem('cjm_progress'); } catch(e) {}
+    updateUI();
+  }
+
+  // init
+  loadState();
+  updateUI();
+</script>
+</body>
+</html>
